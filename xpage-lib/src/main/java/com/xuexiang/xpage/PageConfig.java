@@ -5,9 +5,6 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 import com.xuexiang.xpage.annotation.Page;
 import com.xuexiang.xpage.base.XPageActivity;
 import com.xuexiang.xpage.core.CoreConfig;
@@ -25,15 +22,11 @@ import java.util.List;
  * @since 2018/5/24 下午3:40
  */
 public class PageConfig {
-    private RefWatcher mRefWatcher;
+
     /**
      * 页面配置接口
      */
     private PageConfiguration mPageConfiguration;
-    /**
-     * 是否监测内存泄露
-     */
-    private boolean mIsEnableWatcher = true;
 
     private List<PageInfo> mPages = new ArrayList<>();
 
@@ -61,30 +54,11 @@ public class PageConfig {
     }
 
     /**
-     * 是否监控内存泄露
-     *
-     * @param enableWatcher
-     * @return
-     */
-    public PageConfig enableWatcher(boolean enableWatcher) {
-        mIsEnableWatcher = enableWatcher;
-        return this;
-    }
-
-    public boolean isEnableWatcher() {
-        return mIsEnableWatcher;
-    }
-
-    /**
      * 初始化页面配置
      *
      * @param application
      */
     public void init(Application application) {
-        if (mIsEnableWatcher) {
-            initCanary(application);
-        }
-
         initPages(application);
     }
 
@@ -108,22 +82,6 @@ public class PageConfig {
         Utils.checkNotNull(mPageConfiguration, "mPageConfiguration == null");
         registerPageInfos(mPageConfiguration.registerPages(context));
         CoreConfig.init(context, getPages());
-    }
-
-    /**
-     * 内存泄漏监听
-     *
-     * @param application
-     */
-    private void initCanary(Application application) {
-        if (LeakCanary.isInAnalyzerProcess(application)) {
-            return;
-        }
-        mRefWatcher = LeakCanary.install(application);
-    }
-
-    public RefWatcher getRefWatcher() {
-        return mRefWatcher;
     }
 
 

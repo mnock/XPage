@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.squareup.leakcanary.RefWatcher;
 import com.xuexiang.xpage.PageConfig;
 import com.xuexiang.xpage.core.CoreConfig;
 import com.xuexiang.xpage.core.CoreSwitchBean;
@@ -26,9 +25,6 @@ import com.xuexiang.xpage.utils.TitleBar;
 import com.xuexiang.xpage.utils.TitleUtils;
 
 import java.lang.ref.WeakReference;
-
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * 全局基类BaseFragment
@@ -60,7 +56,6 @@ public abstract class XPageFragment extends Fragment {
      * 根布局
      */
     protected View mRootView;
-    protected Unbinder mUnbinder;
 
     /**
      * 设置该接口用于返回结果
@@ -587,7 +582,6 @@ public abstract class XPageFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRootView = inflateView(inflater, container);
-        mUnbinder = ButterKnife.bind(this, mRootView);
         initArgs();
         initPage();
         return mRootView;
@@ -627,20 +621,12 @@ public abstract class XPageFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        if (mUnbinder != null) {
-            mUnbinder.unbind();
-        }
         super.onDestroyView();
-
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (PageConfig.getInstance().isEnableWatcher()) {
-            RefWatcher refWatcher = PageConfig.getInstance().getRefWatcher();
-            refWatcher.watch(this);
-        }
     }
 
     /**

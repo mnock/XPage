@@ -1086,7 +1086,7 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
     /**
      * -------------------------------------点击非输入区域键盘消失--------------------------------------------
      **/
-    @Override
+/*    @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
@@ -1095,5 +1095,5 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
             }
         }
         return super.dispatchTouchEvent(ev);
-    }
+    }*/
 }
