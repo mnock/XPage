@@ -744,7 +744,7 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
         }
 
         //处理新开activity跳转
-        init(newIntent);
+        init(newIntent,savedInstanceState);
     }
 
     /**
@@ -910,7 +910,7 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
      *
      * @param newIntent Intent对象
      */
-    private void init(Intent newIntent) {
+    private void init(Intent newIntent,Bundle savedInstanceState) {
         try {
             CoreSwitchBean page = newIntent.getParcelableExtra(CoreSwitchBean.KEY_SWITCH_BEAN);
             boolean startActivityForResult = newIntent.getBooleanExtra(CoreSwitchBean.KEY_START_ACTIVITY_FOR_RESULT, false);
@@ -920,20 +920,24 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
                 boolean addToBackStack = page.isAddToBackStack();
                 String pageName = page.getPageName();
                 Bundle bundle = page.getBundle();
-                fragment = CorePageManager.getInstance().openPageWithNewFragmentManager(getSupportFragmentManager(), pageName, bundle, null, addToBackStack);
-                if (fragment != null) {
-                    if (startActivityForResult) {
-                        fragment.setRequestCode(page.getRequestCode());
-                        fragment.setFragmentFinishListener(new XPageFragment.OnFragmentFinishListener() {
-                            @Override
-                            public void onFragmentResult(int requestCode, int resultCode, Intent intent) {
-                                XPageActivity.this.setResult(resultCode, intent);
-                            }
-                        });
+                if(savedInstanceState==null)
+                {
+                    fragment = CorePageManager.getInstance().openPageWithNewFragmentManager(getSupportFragmentManager(), pageName, bundle, null, addToBackStack);
+                    if (fragment != null) {
+                        if (startActivityForResult) {
+                            fragment.setRequestCode(page.getRequestCode());
+                            fragment.setFragmentFinishListener(new XPageFragment.OnFragmentFinishListener() {
+                                @Override
+                                public void onFragmentResult(int requestCode, int resultCode, Intent intent) {
+                                    XPageActivity.this.setResult(resultCode, intent);
+                                }
+                            });
+                        }
+                    } else {
+                        finish();
                     }
-                } else {
-                    finish();
                 }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
