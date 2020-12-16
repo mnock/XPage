@@ -49,7 +49,7 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
     /**
      * 应用中所有XPageActivity的引用
      */
-    private static List<WeakReference<XPageActivity>> sActivities = new ArrayList<>();
+    protected static List<WeakReference<XPageActivity>> sActivities = new ArrayList<>();
     /**
      * 当前activity的引用
      */
@@ -167,7 +167,7 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
      * @param activity      XPageActivity对象
      * @param showAnimation 是否显示动画
      */
-    private void finishActivity(XPageActivity activity, boolean showAnimation) {
+    protected void finishActivity(XPageActivity activity, boolean showAnimation) {
         if (activity != null) {
             activity.finish();
             //从activity列表中移除当前实例
