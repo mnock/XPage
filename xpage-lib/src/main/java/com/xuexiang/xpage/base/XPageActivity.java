@@ -98,6 +98,20 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
         }
     }
 
+    public static void finishAllActivities() {
+        for (WeakReference<XPageActivity> ref : sActivities) {
+            if (ref != null) {
+                XPageActivity item = ref.get();
+                if (item != null) {
+                    item.finish();
+                }
+            }
+        }
+        unInit();
+
+
+    }
+
     /**
      * 获得当前活动页面名
      *
@@ -232,6 +246,10 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
                 if (activity == null) {
                     PageLog.d("item is null");
                     continue;
+                }
+                if (activity.getLocalClassName().contains(pageName)) {
+                    hasFind = true;
+                    break;
                 }
                 FragmentManager manager = activity.getSupportFragmentManager();
                 int count = manager.getBackStackEntryCount();
@@ -744,7 +762,7 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
         }
 
         //处理新开activity跳转
-        init(newIntent,savedInstanceState);
+        init(newIntent, savedInstanceState);
     }
 
     /**
@@ -910,7 +928,7 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
      *
      * @param newIntent Intent对象
      */
-    private void init(Intent newIntent,Bundle savedInstanceState) {
+    private void init(Intent newIntent, Bundle savedInstanceState) {
         try {
             CoreSwitchBean page = newIntent.getParcelableExtra(CoreSwitchBean.KEY_SWITCH_BEAN);
             boolean startActivityForResult = newIntent.getBooleanExtra(CoreSwitchBean.KEY_START_ACTIVITY_FOR_RESULT, false);
@@ -920,8 +938,7 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
                 boolean addToBackStack = page.isAddToBackStack();
                 String pageName = page.getPageName();
                 Bundle bundle = page.getBundle();
-                if(savedInstanceState==null)
-                {
+                if (savedInstanceState == null) {
                     fragment = CorePageManager.getInstance().openPageWithNewFragmentManager(getSupportFragmentManager(), pageName, bundle, null, addToBackStack);
                     if (fragment != null) {
                         if (startActivityForResult) {
