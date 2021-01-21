@@ -53,7 +53,7 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
     /**
      * 当前activity的引用
      */
-    private WeakReference<XPageActivity> mCurrentActivity = null;
+    protected WeakReference<XPageActivity> mCurrentActivity = null;
     /**
      * 记录首个CoreSwitchBean，用于页面切换
      */
@@ -71,11 +71,16 @@ public class XPageActivity extends AppCompatActivity implements CoreSwitcher {
      */
     private int mFragmentRequestCode = -1;
 
+    public CoreSwitchBean getFirstCoreSwitchBean()
+    {
+        return mFirstCoreSwitchBean;
+    }
     /**
      * 返回最上层的activity
      *
      * @return 栈顶Activity
      */
+
     public static XPageActivity getTopActivity() {
         if (sActivities != null) {
             int size = sActivities.size();
